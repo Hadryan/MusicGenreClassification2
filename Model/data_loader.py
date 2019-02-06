@@ -13,7 +13,6 @@ class DL:
         
     def create_dataloader(self):
         datagen_object = datagen(self.label,self.data_path)
-        datagen_object = datagen()
         test_size = 0.2
         valid_size = 0.1
         data_len = len(datagen_object)

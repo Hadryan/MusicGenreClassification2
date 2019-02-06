@@ -19,7 +19,6 @@ class Model:
         return res50
     
     def train_model(self, model, criterion, optimizer, scheduler, num_epochs=10, dataloaders):
-        #dataloaders,_ = self.create_dataloader() #SFSJDBFISUBDFIUSDBFIUAD
         since = time.time()
         model.to(self.device)    
         best_acc = 0.0
