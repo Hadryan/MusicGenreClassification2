@@ -18,7 +18,7 @@ class Model:
                                    )
         return res50
     
-    def train_model(self, model, criterion, optimizer, scheduler, num_epochs=10, dataloaders):
+    def train_model(self, model, criterion, optimizer, scheduler,  dataloaders,num_epochs=10):
         since = time.time()
         model.to(self.device)    
         best_acc = 0.0

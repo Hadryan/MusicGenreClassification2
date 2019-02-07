@@ -2,7 +2,7 @@ from torch.utils.data import Dataset
 import os
 import cv2
 import numpy as np
-from utils import Utils
+from Model.utils import Utils
 
 class datagen(Dataset):
   

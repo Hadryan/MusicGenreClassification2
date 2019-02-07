@@ -1,5 +1,5 @@
-from data_generator import datagen
-from utils import Utils
+from Model.data_generator import datagen
+from Model.utils import Utils
 import numpy as np
 from torch.utils.data.sampler import SubsetRandomSampler
 from torch.utils.data import DataLoader
