@@ -6,7 +6,7 @@ from Data.data_preprocessing import Dataset
 from Model.data_loader import DL
 
 if __name__ == "__main__":
-    csv_path = ''
+    csv_path = 'C:\Users\sanch\Downloads\bakwaas'
     mp3_path = ''
     new_images_path = ''
     epochs = 10
