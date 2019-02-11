@@ -56,7 +56,7 @@ class Dataset:
    
             
     def create_data(self):
-        for i in tqdm(self.song_folder):
+        for i in tqdm(os.listdir(self.song_folder)):
             folder = os.path.join(self.song_folder,i)
             sub_folder = os.listdir(folder)
             for track in sub_folder:
