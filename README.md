@@ -4,7 +4,7 @@ Music Genre classification is an important problem for the services like spotify
 
 # Preprocessing Pipeline:
 
-Code for preprocessing - [here](https://github.com/sanchit2843/MusicGenreClassification/blob/master/Data/data_preprocessing.py)
+Code for preprocessing - [here](https://github.com/sanchit2843/MusicGenreClassification/blob/master/Data/data_preprocessing.py)<br>
 Audio was read using librosa library at a sampling rate of 44100. The data was then converted into frequency domain using librosa.stft. The output was converted in dB scale and the spectogram was plotted and saved as image. This image was chopped into 10 parts each labelled same.
 
 # Data Visualization
