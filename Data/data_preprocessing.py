@@ -42,7 +42,7 @@ class Dataset:
           temp = img[:, (i*w):((i+1)*w), :]
           temp = cv2.resize(temp,(128,128))
           cv2.imwrite((out_path+'_{}.png'.format(i)), temp)
-    
+    #mel spectogram for 1 audio
     def spec_create(self, in_path,out_path):
         x,sr = librosa.load(in_path,sr=44100,mono=True)
         fig = plt.Figure(figsize=(36,15))   
@@ -54,7 +54,7 @@ class Dataset:
         fig.savefig(output)
         self.chop_image(output, out_path)
    
-            
+    #Driver Program   
     def create_data(self):
         for i in tqdm(os.listdir(self.song_folder)):
             folder = os.path.join(self.song_folder,i)
