@@ -9,3 +9,5 @@ Audio was read using librosa library at a sampling rate of 44100. The data was t
 
 # Data Visualization
 Few samples from dataset
+![](https://github.com/sanchit2843/MusicGenreClassification/blob/master/assets/spectogram.png)
+
