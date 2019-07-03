@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import time
 from torchvision import models
+from efficientnet_pytorch import EfficientNet
 
 class dense201(nn.Module):
     def __init__(self,n_classes = 8):
