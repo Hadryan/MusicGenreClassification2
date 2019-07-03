@@ -2,76 +2,119 @@ from __future__ import print_function, division
 import torch
 import torch.nn as nn
 import time
-from torchvision.models import resnet50
+from torchvision import models
 
-class Model:
-    def __init__(self):
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    def get_model(self):
-        res50 = resnet50()
-        num_ftrs = res50.fc.in_features
-        res50.fc = nn.Sequential(nn.Linear(num_ftrs,256),
-                                   nn.ReLU(),
-                                   nn.Linear(256,8),
-                                   nn.LogSoftmax(dim=1)
-                                   )
-        return res50
+class dense201(nn.Module):
+    def __init__(self,n_classes = 8):
+        super(dense201, self).__init__()
+        model = models.densenet201(pretrained = True)
+        model = model.features
+        for child in model.children():
+          for layer in child.modules():
+            layer.requires_grad = False
+            if(isinstance(layer,torch.nn.modules.batchnorm.BatchNorm2d)):
+              layer.requires_grad = True
+        self.model = model
+        self.linear = nn.Linear(3840, 512)
+        self.bn = nn.BatchNorm1d(512)
+        self.dropout = nn.Dropout(0.2)
+        self.elu = nn.ELU()
+        self.out = nn.Linear(512, n_classes)
+        self.bn1 = nn.BatchNorm1d(3840)
+        self.dropout2 = nn.Dropout(0.2)
+    def forward(self, x):
+        out = self.model(x)
+        avg_pool = nn.functional.adaptive_avg_pool2d(out, output_size = 1)
+        max_pool = nn.functional.adaptive_max_pool2d(out, output_size = 1)
+        out = torch.cat((avg_pool,max_pool),1)
+        batch = out.shape[0]
+        out = out.view(batch, -1)
+        conc = self.linear(self.dropout2(self.bn1(out)))
+        conc = self.elu(conc)
+        conc = self.bn(conc)
+        conc = self.dropout(conc)
+        res = self.out(conc)
+        return res
     
-    def train_model(self, model, criterion, optimizer, scheduler,  dataloaders,num_epochs=10):
-        since = time.time()
-        model.to(self.device)    
-        best_acc = 0.0
-
-        for epoch in range(num_epochs):
-          print('Epoch:',epoch)
-          
-          for phase in ['train', 'val']:
-            if phase == ' train':
-                scheduler.step()
-                model.train()  
-            else:
-                model.eval()   
-                
-            running_loss = 0.0
-            running_corrects = 0
-            total = 0
-            
-            for inputs, labels in dataloaders[phase]:    
-                labels = labels.to(self.device)
-                #labels = labels.type(torch.cuda.FloatTensor)
-                inputs = inputs.view(inputs.shape[0],3,128,128)
-                inputs = inputs.to(self.device)
-                inputs = inputs.type(torch.cuda.FloatTensor)
-    
-                # zero the parameter gradients
-                optimizer.zero_grad()
-    
-                with torch.set_grad_enabled(phase == 'train'):
-    
-                    outputs = model(inputs)
-                    _, preds = torch.max(outputs, 1)
-                    #preds = preds.reshape(preds.size(0),-1)
-                    loss = criterion(outputs, labels)
-                   # print(preds)
-                    if phase == 'train':
-                        loss.backward()
-                        optimizer.step()
-    
-                # statistics 
-                running_loss += loss.item() * inputs.size(0)
-    
-                running_corrects = running_corrects + torch.sum(preds == labels.data)
-                total += labels.size(0)
-                
-            epoch_loss = running_loss/(len(dataloaders[phase])*64)
-            epoch_acc = running_corrects.double()/(len(dataloaders[phase])*64)
-            #torch.save(model.state_dict(), './resnet50/genreweights-{}.h5'.format(epoch_acc))
-              
-            print('{} Loss: {:.4f} , acc: {:.4f}'.format(phase, epoch_loss , epoch_acc))
-            
-        time_elapsed = time.time() - since
-        print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
-        best_acc = epoch_acc
-        print('Best val Acc: {:4f}'.format(best_acc))
-        return model
+class effnet(nn.Module):
+    def __init__(self,n_classes = 8):
+        super(effnet, self).__init__()
+        self.model = EfficientNet.from_pretrained('efficientnet-b3')
+        self.linear = nn.Linear(1000, 512)
+        self.bn = nn.BatchNorm1d(512)
+        self.dropout = nn.Dropout(0.2)
+        self.elu = nn.ELU()
+        self.out = nn.Linear(512, n_classes)
+        self.dropout2 = nn.Dropout(0.2)
+    def forward(self, x):
+        out = self.model(x)
+        batch = out.shape[0]
+        out = out.view(batch, -1)
+        conc = self.linear(self.dropout2(out))
+        conc = self.elu(conc)
+        conc = self.bn(conc)
+        conc = self.dropout(conc)
+        res = self.out(conc)
+        return res
+class dense161(nn.Module):
+    def __init__(self,n_classes = 8):
+        super(dense161, self).__init__()
+        model = models.densenet161(pretrained = True)
+        model = model.features
+        for child in model.children():
+          for layer in child.modules():
+            layer.requires_grad = False
+            if(isinstance(layer,torch.nn.modules.batchnorm.BatchNorm2d)):
+              layer.requires_grad = True
+        self.model = model
+        self.linear = nn.Linear(4416, 512)
+        self.bn = nn.BatchNorm1d(512)
+        self.dropout = nn.Dropout(0.2)
+        self.elu = nn.ELU()
+        self.out = nn.Linear(512, n_classes)
+        self.bn1 = nn.BatchNorm1d(4416)
+        self.dropout2 = nn.Dropout(0.2)
+    def forward(self, x):
+        out = self.model(x)
+        avg_pool = nn.functional.adaptive_avg_pool2d(out, output_size = 1)
+        max_pool = nn.functional.adaptive_max_pool2d(out, output_size = 1)
+        out = torch.cat((avg_pool,max_pool),1)
+        batch = out.shape[0]
+        out = out.view(batch, -1)
+        conc = self.linear(self.dropout2(self.bn1(out)))
+        conc = self.elu(conc)
+        conc = self.bn(conc)
+        conc = self.dropout(conc)
+        res = self.out(conc)
+        return res
+class dense121(nn.Module):
+    def __init__(self,n_classes = 8):
+        super(dense121, self).__init__()
+        model = models.densenet121(pretrained = True)
+        model = model.features
+        for child in model.children():
+          for layer in child.modules():
+            layer.requires_grad = False
+            if(isinstance(layer,torch.nn.modules.batchnorm.BatchNorm2d)):
+              layer.requires_grad = True
+        self.model = model
+        self.linear = nn.Linear(2048, 512)
+        self.bn = nn.BatchNorm1d(512)
+        self.dropout = nn.Dropout(0.4)
+        self.elu = nn.ELU()
+        self.out = nn.Linear(512, n_classes)
+        self.bn1 = nn.BatchNorm1d(2048)
+        self.dropout2 = nn.Dropout(0.4)
+    def forward(self, x):
+        out = self.model(x)
+        avg_pool = nn.functional.adaptive_avg_pool2d(out, output_size = 1)
+        max_pool = nn.functional.adaptive_max_pool2d(out, output_size = 1)
+        out = torch.cat((avg_pool,max_pool),1)
+        batch = out.shape[0]
+        out = out.view(batch, -1)
+        conc = self.linear(self.dropout2(self.bn1(out)))
+        conc = self.elu(conc)
+        conc = self.bn(conc)
+        conc = self.dropout(conc)
+        res = self.out(conc)
+        return res
