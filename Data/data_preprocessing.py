@@ -41,7 +41,7 @@ class Dataset:
         for i in range(0,10):
           temp = img[:, (i*w):((i+1)*w), :]
           temp = cv2.resize(temp,(128,128))
-          cv2.imwrite((out_path+'_{}.png'.format(i)), temp)
+          cv2.imwrite((out_path+'/spec_{}.png'.format(i)), temp)
     #mel spectogram for 1 audio
     def spec_create(self, in_path,out_path):
         x,sr = librosa.load(in_path,sr=44100,mono=True)
