@@ -35,3 +35,9 @@ Training curves:
 ![](https://github.com/sanchit2843/MusicGenreClassification/blob/master/assets/loss_2.png)
 
 The sudden increase in the loss in second case is due to unfreezing of model. 
+
+For training see exampletraining.ipynb
+
+# Voting System
+
+For every audio file we have chopped it into 10 spectograms with same labels to all thus significantly increasing datasize. We can use same thing at the time of prediction and getting prediction for 10 chopped spectograms and creating a voting system for the last actual prediction. This can help us to further reduce the tes accuracy. The implementation of running test on audio with voting system can be found in file exampleprediction.ipynb
