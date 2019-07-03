@@ -9,7 +9,7 @@ import pandas as pd
 #from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 class Dataset:
-    def __init__(self,song_folder,new_folder, csv_location):
+    def __init__(self,song_folder = None,new_folder=None, csv_location = None):
         self.song_folder = song_folder
         self.new_folder = new_folder
         self.csv_location = csv_location
