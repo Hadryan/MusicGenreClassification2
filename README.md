@@ -11,3 +11,9 @@ Audio was read using librosa library at a sampling rate of 44100. The data was t
 Few samples from dataset
 ![](https://github.com/sanchit2843/MusicGenreClassification/blob/master/assets/spectogram.png)
 
+# Models:
+We tried multiple models including densenet, efficientnet. The scores achieved by these models on test data are:
+
+| Model |Accuracy|Precision|Recall|F1 Score|
+|---|---|---|---|---|
+|Densenet-121|||||
